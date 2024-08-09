@@ -1,0 +1,15 @@
+# Backend dependencies
+/backend/node_modules
+
+# Backend logs
+/backend/logs
+/backend/*.log
+/backend/npm-debug.log*
+
+# Backend environment variables
+/backend/.env
+/backend/.env.*
+
+# Backend build output
+/backend/dist
+/backend/build
