@@ -1,4 +1,5 @@
 import { IsEnum, IsString, IsNotEmpty } from 'class-validator';
+import { SensorStatus } from '../entities/sensor.entity';
 
 export class CreateSensorDto {
   @IsString()
@@ -13,6 +14,6 @@ export class CreateSensorDto {
   @IsNotEmpty()
   firmwareVersion: string;
 
-  @IsEnum(['OFFLINE', 'ONLINE'], { message: 'Valid role required' })
-  role: 'OFFLINE' | 'ONLINE';
+  @IsEnum(SensorStatus, { message: 'Valid currentStatus required' })
+  currentStatus: SensorStatus;
 }

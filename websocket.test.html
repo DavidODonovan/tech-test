@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <div id="messages"></div>
+
+    <script>
+        const socket = io('http://localhost:3001'); // Correct URL without '/sensors'
+
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket');
+            addMessage('Connected to WebSocket');
+        });
+
+        socket.on('statusUpdate', (data) => {
+            console.log('Received status update:', data);
+            addMessage(`Sensor ${data.id} status updated to ${data.currentStatus}`);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from WebSocket');
+            addMessage('Disconnected from WebSocket');
+        });
+
+        function addMessage(message) {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML += `<p>${message}</p>`;
+        }
+    </script>
+</body>
+</html>

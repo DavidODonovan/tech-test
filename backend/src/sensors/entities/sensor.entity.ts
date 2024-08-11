@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-export enum UserStatus {
-  ONLINE = 'online',
-  OFFLINE = 'offline',
+export enum SensorStatus {
+  OFFLINE = 'OFFLINE',
+  ONLINE = 'ONLINE',
 }
 
 @Entity()
@@ -21,8 +21,8 @@ export class Sensor {
 
   @Column({
     type: 'enum',
-    enum: UserStatus,
-    default: UserStatus.OFFLINE,
+    enum: SensorStatus,
+    default: SensorStatus.OFFLINE,
   })
-  currentStatus: UserStatus;
+  currentStatus: SensorStatus;
 }
