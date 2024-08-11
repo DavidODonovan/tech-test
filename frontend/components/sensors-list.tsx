@@ -13,7 +13,7 @@ const fetchSensors = async () => {
   return response.json();
 };
 
-export const  SensorList=():React.FC=>{
+export const  SensorList=()=>{
   const { sensors, updateSensor } = useSensorStore();
   const { data, isLoading, error } = useQuery({
     queryKey: ['sensors'],
