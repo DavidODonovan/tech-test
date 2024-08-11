@@ -6,6 +6,7 @@ import { Sensor } from './entities/sensor.entity';
 import { SensorsListener } from './sensors.listener';
 import { SensorsGateway } from './sensors.gateway';
 
+//TODO: add GRPC service to this module
 @Module({
   imports: [TypeOrmModule.forFeature([Sensor])],
   controllers: [SensorsController],

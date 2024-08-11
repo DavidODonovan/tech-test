@@ -7,10 +7,12 @@ import { useSensorStore } from '../lib/store';
 
 const fetchSensors = async () => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sensors`);
+  console.log("I was called: ", `${process.env.NEXT_PUBLIC_API_URL}/sensors`)
   if (!response.ok) {
     throw new Error('Failed to fetch sensors');
   }
-  return response.json();
+  console.log({response})
+  return  await response.json();
 };
 
 export const  SensorList=()=>{

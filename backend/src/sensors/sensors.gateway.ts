@@ -8,7 +8,9 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: '*', // Update this to your frontend URL in production
+    origin: 'http://localhost:3000', //update this to our frontend host in prod.
+    methods: ['GET', 'POST'],
+    credentials: true,
   },
 })
 export class SensorsGateway
