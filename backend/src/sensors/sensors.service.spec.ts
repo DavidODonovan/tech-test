@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SensorsService } from './sensors.service';
 import { Sensor, SensorStatus } from './entities/sensor.entity';
 import { CreateSensorDto } from './dto/create-sensor.dto';
@@ -10,6 +11,7 @@ import { NotFoundException } from '@nestjs/common';
 describe('SensorsService', () => {
   let service: SensorsService;
   let repo: Repository<Sensor>;
+  let eventEmitter: EventEmitter2;
 
   const mockSensor: Sensor = {
     id: 1,
@@ -27,6 +29,10 @@ describe('SensorsService', () => {
     remove: jest.fn().mockResolvedValue(mockSensor),
   };
 
+  const mockEventEmitter = {
+    emit: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -35,13 +41,17 @@ describe('SensorsService', () => {
           provide: getRepositoryToken(Sensor),
           useValue: mockRepository,
         },
+        {
+          provide: EventEmitter2,
+          useValue: mockEventEmitter,
+        },
       ],
     }).compile();
 
     service = module.get<SensorsService>(SensorsService);
     repo = module.get<Repository<Sensor>>(getRepositoryToken(Sensor));
+    eventEmitter = module.get<EventEmitter2>(EventEmitter2);
 
-    // Reset all mocks before each test
     jest.clearAllMocks();
   });
 
@@ -93,11 +103,6 @@ describe('SensorsService', () => {
       };
 
       const updatedSensor = { ...mockSensor, ...updateSensorDto };
-
-      // Mock findOneBy to return the sensor
-      jest.spyOn(repo, 'findOneBy').mockResolvedValue(mockSensor);
-
-      // Mock save to return the updated sensor
       jest.spyOn(repo, 'save').mockResolvedValue(updatedSensor);
 
       const result = await service.update(1, updateSensorDto);
@@ -105,6 +110,10 @@ describe('SensorsService', () => {
       expect(result).toEqual(updatedSensor);
       expect(repo.findOneBy).toHaveBeenCalledWith({ id: 1 });
       expect(repo.save).toHaveBeenCalledWith(updatedSensor);
+      expect(eventEmitter.emit).toHaveBeenCalledWith('sensor.statusUpdate', {
+        id: updatedSensor.id,
+        currentStatus: updatedSensor.currentStatus,
+      });
     });
 
     it('should throw NotFoundException if sensor to update is not found', async () => {
@@ -118,9 +127,6 @@ describe('SensorsService', () => {
 
   describe('remove', () => {
     it('should remove a sensor', async () => {
-      // Mock findOneBy to return the sensor
-      jest.spyOn(repo, 'findOneBy').mockResolvedValue(mockSensor);
-
       const result = await service.remove(1);
 
       expect(result).toEqual(mockSensor);
@@ -134,4 +140,5 @@ describe('SensorsService', () => {
       await expect(service.remove(999)).rejects.toThrow(NotFoundException);
     });
   });
+
 });
