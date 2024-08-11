@@ -6,6 +6,7 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
+
 # Install dependencies and Nest CLI globally
 RUN npm install && npm install -g @nestjs/cli
 

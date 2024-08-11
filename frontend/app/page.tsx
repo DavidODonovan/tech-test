@@ -10,7 +10,6 @@ export default function Home() {
   useEffect(()=>{
     const updateState = async()=>{
       const testThing = await fetchDevices();
-      console.log("thing", testThing)
       setData(testThing);
     };
     updateState();
@@ -18,7 +17,7 @@ export default function Home() {
 
   return (
       <main className="h-full flex flex-col items-center justify-center px-16 ">
-        hello 
+        hello {data}
       </main>
   );
 }
