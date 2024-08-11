@@ -44,6 +44,7 @@ export class SensorsService {
         currentStatus: updatedSensor.currentStatus,
       });
     }
+    return updatedSensor;
   }
 
   async remove(id: number) {
