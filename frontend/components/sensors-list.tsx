@@ -14,14 +14,17 @@ export const SensorList = () => {
 
   const { updateStatus, sensorStatuses } = useSensorStatusStore();
 
-  const updateSensorStatus = useCallback((sensor: SensorType, id: number, newStatus: SensorStatus): SensorType => (sensor.id === id ? { ...sensor, currentStatus: newStatus } : sensor), []);
+  const updateSensorStatus = useCallback((sensor: SensorType, id: number, newStatus: SensorStatus): SensorType => {
+    return (sensor.id === id ? { ...sensor, currentStatus: newStatus } : sensor);
+  }, []);
 
   useEffect(() => {
     const socket = setupSocket((id, currentStatus) => {
       updateStatus(id, currentStatus);
-
       // Optimistically update React Query cache
-      queryClient.setQueryData<SensorType[]>(['sensors'], (oldSensors = []) => oldSensors.map((sensor) => updateSensorStatus(sensor, id, currentStatus)));
+      queryClient.setQueryData<SensorType[]>(['sensors'], (oldSensors = []) => {
+        return oldSensors.map((sensor) => updateSensorStatus(sensor, id, currentStatus));
+      });
     });
 
     return () => {

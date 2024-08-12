@@ -19,7 +19,8 @@ export const setupSocket = (onStatusUpdate: (sensorId: number, status: StatusUpd
     console.log('Received status update:', data);
   });
 
-  socket.on('statusUpdate', ({ id, currentStatus }: StatusUpdate) => {
+  socket.on('statusUpdate', (update: StatusUpdate) => {
+    const { id, currentStatus } = update;
     onStatusUpdate(id, currentStatus);
   });
 
