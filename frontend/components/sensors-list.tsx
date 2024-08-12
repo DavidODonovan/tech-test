@@ -26,7 +26,7 @@ export const SensorList = () => {
         return oldSensors.map((sensor) => updateSensorStatus(sensor, id, currentStatus));
       });
     });
-
+    //cleanup
     return () => {
       socket.disconnect();
     };
