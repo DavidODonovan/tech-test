@@ -38,6 +38,68 @@ On the frontend it was a great opportunity to implement client side application 
 Fireship released video on TimescaleDB on the weekend, might be useful for timestamped sensor data?... https://www.youtube.com/watch?v=69Tzh_0lHJ8
 
 
+## The spec
+Please place your code into a private GitHub Repository and once completed, share it with the following handles: harrygturner, hooch, vKeeReal, OliFleming, and pranabamatya – and reply to this email to notify us of the completion.
+
+ 
+
+As a sales engineer:
+
+I want to access a list of sensors that are in operation
+I want to see sensor firmware versions
+I want to see which sensors are online or offline, with real-time updates
+ 
+
+Tasks
+
+Create a backend API service
+
+Create a simple model (suggested TypeORM) - using Postgres or SQLlite. Model should reflect a list of sensors, with properties:
+·         name
+
+·         unique serial number
+
+·         firmware version
+
+·         current status (online/offline)
+
+ 
+
+Seed the sensors model with random data
+ 
+
+Create a REST API backend (strongly recommend using NestJS):
+·         Expose a REST API of the above
+
+·         Expose a WebSocket endpoint to transmit live status updates per device – implement best practice.
+
+ 
+
+Create a frontend
+
+React suggested, using Vite and TypeScript. Redux suggested, but not required. Material UI suggested, or any UI framework.
+
+Render a table of sensors, showing their:
+·         name
+
+·         unique serial number
+
+·         firmware version
+
+·         current status (online/offline)
+
+ 
+
+Requirements
+
+Basic unit tests for backend and frontend
+Please provide an explanation in a README of what might be done to improve your work if more time was available (bullet points acceptable)
+Please document any further concepts or thought
+ 
+Recommendations
+
+Docker infrastructure for full application setup is optional, but highly recommended.
+
 
 
 
