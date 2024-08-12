@@ -2,9 +2,9 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { SensorsTable } from './sensors-table';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import * as storeModule from '../../store';
-import * as socketSetupModule from '../../lib/socketSetup';
-import * as sensorsModule from '../../actions/sensors';
+import * as storeModule from '@/store';
+import * as socketSetupModule from '@/lib/socketSetup';
+import * as sensorsModule from '@/actions/sensors';
 
 // Mock dependencies
 jest.mock('@tanstack/react-query', () => ({
@@ -63,38 +63,23 @@ it('sorts the table when clicking on the Name header', async () => {
   render(<SensorsTable />);
   const nameHeader = screen.getByText('Name');
 
-  // Log initial state
   let rows = screen.getAllByRole('row');
-  console.log(
-    'Initial order:',
-    rows.map((row) => row.textContent)
-  );
 
   // Click once
   fireEvent.click(nameHeader);
   await waitFor(() => {
     rows = screen.getAllByRole('row');
-    console.log(
-      'Order after first click:',
-      rows.map((row) => row.textContent)
-    );
   });
 
   // Click twice
   fireEvent.click(nameHeader);
   await waitFor(() => {
     rows = screen.getAllByRole('row');
-    console.log(
-      'Order after second click:',
-      rows.map((row) => row.textContent)
-    );
   });
 
   // Assert that the order has changed, without specifying the exact order
   expect(rows[1].textContent).not.toEqual(rows[2].textContent);
 
-  // Log the final state of the component for debugging
-  console.log('Final component state:', screen.getByRole('table').outerHTML);
 });
 
  it('copies serial number to clipboard when action is clicked', async () => {
@@ -107,67 +92,25 @@ it('sorts the table when clicking on the Name header', async () => {
 
    const { container, debug } = render(<SensorsTable />);
 
-   console.log('Initial HTML:', container.innerHTML);
-
-   // Function to log all elements and their properties
-   const logAllElements = (element: Element, depth = 0) => {
-     console.log(
-       ' '.repeat(depth * 2),
-       element.tagName,
-       element.id ? `#${element.id}` : '',
-       Array.from(element.classList)
-         .map((c) => `.${c}`)
-         .join(''),
-       element.getAttribute('role') ? `[role="${element.getAttribute('role')}"]` : '',
-       element.textContent ? `"${element.textContent.trim()}"` : ''
-     );
-     Array.from(element.children).forEach((child) => logAllElements(child, depth + 1));
-   };
-
-   console.log('All elements in the component:');
-   logAllElements(container);
-
    // Find all clickable elements
    const clickableElements = container.querySelectorAll('button, [role="button"], [type="button"]');
-   console.log(
-     'Clickable elements:',
-     Array.from(clickableElements).map((el) => el.textContent)
-   );
 
    if (clickableElements.length > 0) {
-     console.log('Clicking first clickable element:', clickableElements[0].textContent);
      fireEvent.click(clickableElements[0]);
-
-     console.log('HTML after clicking:', container.innerHTML);
-     console.log('All elements after clicking:');
-     logAllElements(container);
-
      // Try to find any element that might be related to copying
      const copyElements = container.querySelectorAll('[class*="copy" i], [id*="copy" i], [class*="clipboard" i], [id*="clipboard" i]');
-     console.log(
-       'Possible copy elements:',
-       Array.from(copyElements).map((el) => el.textContent)
-     );
 
      if (copyElements.length > 0) {
-       console.log('Clicking first copy element:', copyElements[0].textContent);
        fireEvent.click(copyElements[0]);
 
        // Verify that the clipboard writeText was called
        expect(mockClipboard.writeText).toHaveBeenCalled();
 
-       console.log('Clipboard writeText called with:', mockClipboard.writeText.mock.calls[0][0]);
-
        // Adjust the expectation based on the actual implementation
        expect(mockClipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('SN00'));
-     } else {
-       console.log('No copy elements found');
-     }
-   } else {
-     console.log('No clickable elements found');
-   }
+     } 
+   } 
 
-   console.log('Final HTML:', container.innerHTML);
    debug();
  });
 
@@ -230,31 +173,12 @@ it('sorts the table when clicking on the Name header', async () => {
     });
 
     const { container } = render(<SensorsTable />);
-    console.log('Rendered HTML:', container.innerHTML);
-
-    // Check if the sensor names are rendered
-    console.log('Sensor 1 present:', screen.queryByText('Sensor 1') !== null);
-    console.log('Sensor 2 present:', screen.queryByText('Sensor 2') !== null);
 
     const statusIndicators = screen.queryAllByTestId('status-indicator');
-    console.log('Number of status indicators found:', statusIndicators.length);
 
     // Search for elements with specific classes
     const greenIndicators = container.querySelectorAll('.bg-green-500');
     const redIndicators = container.querySelectorAll('.bg-red-500');
-    console.log('Green indicators:', greenIndicators.length);
-    console.log('Red indicators:', redIndicators.length);
-
-    // Search for all small round divs
-    const roundDivs = container.querySelectorAll('div.rounded-full');
-    console.log('Round divs:', roundDivs.length);
-
-    // Log all divs for inspection
-    const allDivs = container.querySelectorAll('div');
-    console.log('All divs:', allDivs.length);
-    allDivs.forEach((div, index) => {
-      console.log(`Div ${index}:`, div.outerHTML);
-    });
 
     // Adjust the expectations based on what we find
     expect(statusIndicators.length + greenIndicators.length + redIndicators.length).toBeGreaterThan(0);
