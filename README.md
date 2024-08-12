@@ -2,9 +2,8 @@
 
 To set up and run this project:
 
-### 1 navigate to root of project.
-
-Change permissions of bash script file;
+### 1 
+Navigate to root of project. Change permissions of bash script file;
 ```chmod +x start-app.sh```
 ### 2
 
@@ -13,7 +12,7 @@ The frontend of this project uses environment variables, so you need to add an `
 - `NEXT_PUBLIC_API_URL=http://localhost:3001` - The based URL of the REST API endpoints.
 - `NEXT_PUBLIC_WS_URL=ws://localhost:3001` -  The URL for WebSocket connections.
 ### 3
-Then run the start script;
+In the root directory of the project run the start script to start up both backend and frontend;
 ```./start-app.sh```
 
 This will run backend in docker containers for node.js server and postgres db, and also run the frontend in dev mode.
