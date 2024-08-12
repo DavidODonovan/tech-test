@@ -9,6 +9,7 @@ export type Sensor = {
 };
 
 export const fetchSensors = async (): Promise<Sensor[]> => {
+  console.log("I was called")
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sensors`);
   if (!response.ok) {
     throw new Error('Failed to fetch sensors');

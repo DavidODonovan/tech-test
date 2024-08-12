@@ -1,8 +1,10 @@
 import io, { Socket } from 'socket.io-client';
 
+export type SensorStatus = 'ONLINE' | 'OFFLINE';
+
 interface StatusUpdate {
   id: number;
-  currentStatus: 'ONLINE' | 'OFFLINE';
+  currentStatus: SensorStatus;
 }
 
 export const setupSocket = (onStatusUpdate: (sensorId: number, status: StatusUpdate) => void): Socket => {
