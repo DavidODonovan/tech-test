@@ -91,7 +91,7 @@ export function SensorsTable() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => copyToClipboard(sensor.id.toString())}>Copy sensor ID</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => copyToClipboard(sensor.serialNumber.toString())}>Copy serial number</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>View sensor details</DropdownMenuItem>
               <DropdownMenuItem>Update firmware</DropdownMenuItem>
