@@ -1,18 +1,17 @@
-import io, { Socket } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 export type SensorStatus = 'ONLINE' | 'OFFLINE';
 
-interface StatusUpdate {
+export interface StatusUpdate {
   id: number;
   currentStatus: SensorStatus;
 }
 
 export const setupSocket = (onStatusUpdate: (sensorId: number, status: StatusUpdate) => void): Socket => {
-  const socket = io(`${process.env.NEXT_PUBLIC_WS_URL}`);
+  const socket = io(`${process.env.NEXT_PUBLIC_WS_URL || ''}`);
 
   socket.on('connect', () => {
     console.log('Connected to Socket.IO server');
-
   });
 
   socket.on('statusUpdate', (data) => {
@@ -21,7 +20,7 @@ export const setupSocket = (onStatusUpdate: (sensorId: number, status: StatusUpd
 
   socket.on('statusUpdate', (update: StatusUpdate) => {
     const { id, currentStatus } = update;
-    onStatusUpdate(id, currentStatus);
+    onStatusUpdate(id, update);
   });
 
   socket.on('disconnect', () => {

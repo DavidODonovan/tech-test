@@ -21,15 +21,17 @@ export function SensorsTable() {
   const { updateStatus } = useSensorStatusStore();
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const updateSensorStatus = useCallback(
-    (id: number, currentStatus: SensorStatus) => {
-      updateStatus(id, currentStatus);
+const updateSensorStatus = useCallback(
+  (sensorId: number, status: {id: number, currentStatus: "OFFLINE" | "ONLINE"}) => {
+    // Assuming StatusUpdate is an object with a currentStatus property
+    const { currentStatus } = status;
+    updateStatus(sensorId, currentStatus);
 
-      // Optimistically update React Query cache
-      queryClient.setQueryData<SensorType[]>(['sensors'], (oldSensors = []) => oldSensors.map((sensor) => (sensor.id === id ? { ...sensor, currentStatus } : sensor)));
-    },
-    [updateStatus, queryClient]
-  );
+    // Optimistically update React Query cache
+    queryClient.setQueryData<SensorType[]>(['sensors'], (oldSensors = []) => oldSensors.map((sensor) => (sensor.id === sensorId ? { ...sensor, currentStatus } : sensor)));
+  },
+  [updateStatus, queryClient]
+);
 
   useEffect(() => {
     const socket = setupSocket(updateSensorStatus);
