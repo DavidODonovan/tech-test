@@ -4,8 +4,18 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchSensors, Sensor as SensorType } from '@/actions/sensors';
 import { useSensorStatusStore } from '@/store';
 import { setupSocket, SensorStatus } from '@/lib/socketSetup';
+import { DataTable } from './data-table';
+import { Payment, columns } from './columns';
 
-export const SensorList = () => {
+const dummyData = [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    }]
+
+export const SensorsTable = () => {
   const queryClient = useQueryClient();
   const { data: sensors, isLoading } = useQuery({
     queryKey: ['sensors'],
@@ -36,6 +46,9 @@ export const SensorList = () => {
 
   return (
     <div>
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={dummyData} />
+      </div>
       {sensors?.map((sensor: SensorType) => (
         <div key={sensor.id}>
           Serial Number: {sensor.serialNumber}, Device name: {sensor.name}, Firmware version: {sensor.firmwareVersion}, Status: {sensorStatuses[sensor.id] || sensor.currentStatus}
