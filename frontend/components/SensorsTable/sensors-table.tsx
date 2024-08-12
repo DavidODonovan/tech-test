@@ -45,10 +45,6 @@ export function SensorsTable() {
 
   const columns: ColumnDef<SensorType>[] = [
     {
-      accessorKey: 'id',
-      header: 'ID'
-    },
-    {
       accessorKey: 'name',
       header: ({ column }) => {
         return (
@@ -73,7 +69,13 @@ export function SensorsTable() {
       cell: ({ row }) => {
         const sensor = row.original;
         const sensorStatuses = useSensorStatusStore((state) => state.sensorStatuses);
-        return sensorStatuses[sensor.id] || sensor.currentStatus;
+        const status = sensorStatuses[sensor.id] || sensor.currentStatus;
+        return (
+          <div className="flex items-center">
+            <div className={`w-2 h-2 rounded-full mr-2 ${status === 'ONLINE' ? 'bg-green-500' : 'bg-red-500'}`} />
+            {status}
+          </div>
+        );
       }
     },
     {
