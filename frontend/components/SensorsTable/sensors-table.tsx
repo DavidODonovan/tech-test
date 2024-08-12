@@ -28,7 +28,11 @@ const updateSensorStatus = useCallback(
     updateStatus(sensorId, currentStatus);
 
     // Optimistically update React Query cache
-    queryClient.setQueryData<SensorType[]>(['sensors'], (oldSensors = []) => oldSensors.map((sensor) => (sensor.id === sensorId ? { ...sensor, currentStatus } : sensor)));
+    queryClient.setQueryData<SensorType[]>(['sensors'], (oldSensors = []) => {
+      return oldSensors.map((sensor) => {
+        return (sensor.id === sensorId ? { ...sensor, currentStatus } : sensor);
+      })
+    });
   },
   [updateStatus, queryClient]
 );

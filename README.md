@@ -18,7 +18,7 @@ Then run the start script;
 
 This will run backend in docker containers for node.js server and postgres db, and also run the frontend in dev mode.
 
-The start script populates the database with a default number of just 10 items. If you wish to customise just add -n flag to start command like so ```./start-app.sh -n 20```
+The start script populates the database with a default number of just 10 items. If you wish to customise just add -n flag to start command like so ```./start-app.sh -n 100```
 
 ## Observations
 ### Possibly use TimescaleDB in future? 
