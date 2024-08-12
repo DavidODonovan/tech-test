@@ -1,48 +1,41 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import io from 'socket.io-client';
-import { useSensorStore } from '../lib/store';
-
-const fetchSensors = async () => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sensors`);
-  console.log("I was called: ", `${process.env.NEXT_PUBLIC_API_URL}/sensors`)
-  if (!response.ok) {
-    throw new Error('Failed to fetch sensors');
-  }
-  console.log({response})
-  return  await response.json();
-};
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchSensors, Sensor as SensorType } from '@/actions/sensors';
+import { useSensorStatusStore } from '@/store';
+import { setupSocket } from '@/lib/socketSetup';
 
 export const  SensorList=()=>{
-  const { sensors, updateSensor } = useSensorStore();
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['sensors'],
-    queryFn: fetchSensors,
-    onSuccess: (data) => useSensorStore.setState({ sensors: data })
-  });
+  const queryClient = useQueryClient();
+  const query = useQuery({ queryKey: ['sensors'], queryFn: ()=>fetchSensors() });
+  const { data: sensors, isLoading } = query;  
+  const sensorStatusStore  = useSensorStatusStore()
+  const { updateStatus } = sensorStatusStore;
 
   useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_WS_URL || '');
-    socket.on('statusUpdate', (updatedSensor) => {
-      updateSensor(updatedSensor);
+    console.log({sensorStatusStore});
+    const socket = setupSocket((id, currentStatus) => {
+      updateStatus(id, currentStatus);
+      // Optimistically update React Query cache
+      queryClient.setQueryData<SensorType[]>('sensors', (oldSensors = []) => oldSensors.map((sensor) => (sensor.id === id ? { ...sensor, currentStatus } : sensor)));
     });
+
     return () => {
       socket.disconnect();
     };
-  }, [updateSensor]);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching sensors</div>;
+  }, [updateStatus, queryClient]);
 
   return (
     <div>
-      {sensors.map((sensor) => (
-        <div key={sensor.id}>
-          {sensor.name} - Status: {sensor.currentStatus}
-        </div>
-      ))}
+      {sensors && sensors.map((d: any) => {
+        return (
+          <div key={d.id}>
+            Serial Number: {d.serialNumber}, Device name:{d.name}, Firmware version: {d.firmwareVersion} Status: {d.currentStatus}
+          </div>
+        )
+      }
+     )}
     </div>
   );
 }
