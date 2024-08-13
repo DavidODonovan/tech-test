@@ -23,7 +23,7 @@ The start script populates the database with a default number of just 10 items. 
 ### Thoughts and approach
 This was a great opportunity to learn the basics of Nest.js and TypeORM. 
 The abstractions provided by the libraries are a bit weird at first, but powerful, and there has clearly been some
-deep though put into building out Nest.js. I am particularly drawn the the opinionated nature of the library as this forces standardisation across teams and organisations for implementing common API scenarios, but the option to customise is still there. Implementing websockets was too easy! I'll be having another look at the websockets implementation to see if there is a better way to do it.
+deep thought put into building out Nest.js. I am particularly drawn j the opinionated nature of the library as this forces standardisation across teams and organisations for implementing common API scenarios, but the option to customise is still there. Implementing websockets was too easy! I'll be having another look at the websockets implementation to see if there is a better way to do it.
 
 On the frontend it was a great opportunity to implement client side application level state management using two different libraries, Zustand and React-Query. This preliminary exploration, in my opinion, shows promise. It is good to have a clear separation of concerns between client-state and server-state on the frontend. I'd like to learn more about react-query's caching behaviour, and I love the simplicity of using Zustand to update sensor-status state on websocket notifications. 
 
